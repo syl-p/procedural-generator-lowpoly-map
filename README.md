@@ -1,2 +1,2 @@
-# procedural-map-threejs
+# Low poly map generator
 Low poly map generator
