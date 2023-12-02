@@ -1,15 +1,15 @@
 import './style.css'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import * as dat from 'lil-gui'
-import { CylinderGeometry, MeshPhysicalMaterial, MeshStandardMaterial, SphereGeometry } from 'three'
-import {createNoise2D} from 'simplex-noise';
+// import * as dat from 'lil-gui'
+import { CylinderGeometry, MeshPhysicalMaterial, MeshStandardMaterial } from 'three'
+import { createNoise2D } from 'simplex-noise';
 
 /**
  * Base
  */
 // Debug
-const gui = new dat.GUI()
+// const gui = new dat.GUI()
 
 // Canvas
 const canvas = document.querySelector('#app canvas')
@@ -21,7 +21,7 @@ scene.background = new THREE.Color('#ffeecc')
 /**
  * Sizes
  */
- const sizes = {
+const sizes = {
   width: window.innerWidth,
   height: window.innerHeight
 }
@@ -46,16 +46,16 @@ if (canvas) {
 
   // EnvMap
   var loader = new THREE.CubeTextureLoader();
-  loader.setPath( 'textures/cube/0/' );
-  var textureCube = loader.load( [
+  loader.setPath('textures/cube/0/');
+  var textureCube = loader.load([
     'px.png', 'nx.png',
     'py.png', 'ny.png',
     'pz.png', 'nz.png'
-  ] );
+  ]);
 
 
   var textureLoader = new THREE.TextureLoader()
-  
+
   const textures: any = {
     stone: await textureLoader.loadAsync('textures/stone.png'),
     grass: await textureLoader.loadAsync('textures/grass.jpg'),
@@ -71,7 +71,7 @@ if (canvas) {
   scene.add(ambientLight)
 
   const adjustPositionWithModulo = (position: THREE.Vector2) => {
-    return new THREE.Vector2((position.x + (position.y % 2) / 2 ) * 1.77, position.y * 1.535)
+    return new THREE.Vector2((position.x + (position.y % 2) / 2) * 1.77, position.y * 1.535)
   }
 
   const hexagon = (height: number, position: THREE.Vector2, texture: THREE.Texture) => {
@@ -112,7 +112,7 @@ if (canvas) {
 
   const three = (height: number, position: THREE.Vector2) => {
     const threeHeight = Math.random() * 1 + 1.25
-    const threeMat =  new MeshStandardMaterial({
+    const threeMat = new MeshStandardMaterial({
       map: textures.grass
     })
 
@@ -131,7 +131,7 @@ if (canvas) {
     p3.castShadow = true
     p3.receiveShadow = true
 
-    
+
     return [p1, p2, p3]
   }
 
@@ -150,39 +150,39 @@ if (canvas) {
         let noise = (noise2D(i * 0.08, j * 0.08) + 1) * 0.5
 
         console.log(noise + 1, Math.pow(noise, 1.5))
-        
-        const noiseUp = Math.pow(noise <= 0 ? noise * -1 :  noise, 1.5) * MAX_HEIGHT
-        
+
+        const noiseUp = Math.pow(noise <= 0 ? noise * -1 : noise, 1.5) * MAX_HEIGHT
+
         let textureToApply = null
-        if(noiseUp > STONE_HEIGHT) {
+        if (noiseUp > STONE_HEIGHT) {
           textureToApply = textures.stone
           if (Math.random() > 0.8)
-          scene.add(rock(noiseUp, position))
+            scene.add(rock(noiseUp, position))
 
         } else if (noiseUp > DIRT_HEIGHT) {
           textureToApply = textures.dirt
 
           if (Math.random() > 0.8)
-          scene.add(three(noiseUp, position)[0], three(noiseUp, position)[1], three(noiseUp, position)[2])
-          
+            scene.add(three(noiseUp, position)[0], three(noiseUp, position)[1], three(noiseUp, position)[2])
+
         } else if (noiseUp > GRASS_HEIGHT) {
           textureToApply = textures.grass
         } else if (noiseUp > SAND_HEIGHT) {
           textureToApply = textures.sand
 
           if (Math.random() > 0.8)
-          scene.add(rock(noiseUp, position))
+            scene.add(rock(noiseUp, position))
         } else if (noiseUp > DIRT2_HEIGHT) {
           textureToApply = textures.dirt2
         }
-        
-        scene.add(hexagon(noiseUp , position, textureToApply))
+
+        scene.add(hexagon(noiseUp, position, textureToApply))
       }
     }
   }
 
   // SEA
-  let seaMesh = new THREE.Mesh(new CylinderGeometry(17, 17, MAX_HEIGHT * 0.2, 50), 
+  let seaMesh = new THREE.Mesh(new CylinderGeometry(17, 17, MAX_HEIGHT * 0.2, 50),
     new MeshPhysicalMaterial({
       envMap: textureCube,
       color: new THREE.Color('#55aaff').convertSRGBToLinear().multiplyScalar(3),
@@ -190,7 +190,7 @@ if (canvas) {
       transmission: 1,
       transparent: true,
       opacity: 0.8,
-      envMapIntensity: 0.2, 
+      envMapIntensity: 0.2,
       roughness: 1,
       metalness: 0.025,
       roughnessMap: textures.water,
@@ -207,7 +207,7 @@ if (canvas) {
     new MeshPhysicalMaterial({
       envMap: textureCube,
       map: textures.dirt2,
-      envMapIntensity: 0.1, 
+      envMapIntensity: 0.1,
       side: THREE.DoubleSide,
     })
   );
@@ -220,9 +220,9 @@ if (canvas) {
    * Renderer
    */
   const renderer = new THREE.WebGLRenderer({
-      antialias: true,
-      canvas: canvas,
-      alpha: true
+    antialias: true,
+    canvas: canvas,
+    alpha: true
   })
   renderer.setSize(sizes.width, sizes.height)
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
@@ -251,8 +251,7 @@ if (canvas) {
   scene.add(new THREE.PointLightHelper(light))
   scene.add(new THREE.CameraHelper(light.shadow.camera))
 
-  window.addEventListener('resize', () =>
-  {
+  window.addEventListener('resize', () => {
     // Update sizes
     sizes.width = window.innerWidth
     sizes.height = window.innerHeight
@@ -270,9 +269,8 @@ if (canvas) {
   /**
    * Animate
    */
-  const clock = new THREE.Clock()
-  const tick = () =>
-  {
+  // const clock = new THREE.Clock()
+  const tick = () => {
 
     // Update controls
     controls.update()
